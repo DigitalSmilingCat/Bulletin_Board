@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Success
+{% endblock title %}
+
+{% block content %}
+<h1>Response was sent!</h1>
+<a href="{% url 'poster_list' %}">Return to poster list</a>
+{% endblock content %}

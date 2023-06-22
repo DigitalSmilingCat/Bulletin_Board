@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Responses
+{% endblock title %}
+
+{% block content %}
+{% if response_list %}
+<ul class="list-group list-group-flush">
+    {% for response in response_list %}
+        {% if response.status == 'A' or response.status is None %}
+        <li class="list-group-item" style="border: 1px solid #ccc;">
+            <small class="fw-bold">{{ response.created|date:'d.m.y' }} </small>
+            <small class="text-muted ">(from: <b>{{ response.user.username }}</b>)</small> <br>
+            <hr>
+            {{ response.text }}
+            <hr>
+                {% if response.status == 'A' %}
+                    <em>Status: <b>{{ response.get_status_display }}</b></em>
+                {% else %}
+                    <a href="{% url 'approve' pk=response.pk %}"><button>Approve</button></a>
+                    <a href="{% url 'reject' pk=response.pk %}"><button>Reject</button></a>
+                {% endif %}
+        </li>
+            <br>
+        {% endif %}
+    {% endfor %}
+</ul>
+{% else %}
+    No responses
+{% endif %}
+{% endblock content %}

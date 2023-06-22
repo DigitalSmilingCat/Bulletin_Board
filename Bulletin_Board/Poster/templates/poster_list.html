@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load custom_tags %}
+
+{% block title %}
+Bulletin Board
+{% endblock title %}
+
+{% block content %}
+{% if poster_list %}
+<h1 class="text-center">Bulletin Board</h1>
+<h3 class="text-center"><span class="text-muted fs-6 fw-normal">Total number: {{ page_obj.paginator.count }} /
+On this page: {{ poster_list | length }}</span></h3>
+<hr>
+<ul class="list-group list-group-flush">
+    {% for poster in poster_list %}
+        <li class="list-group-item">
+            <small class="fw-bold">{{ poster.created|date:'d.m.y' }} </small>
+            <a href="/{{ poster.id }}">{{ poster.title }}</a>
+            <small class="text-muted ">(author: <b>{{ poster.user.username }}</b>, category: <b>{{ poster.category }})</b></small> <br>
+            <p>{{ poster.content|truncatechars:40|safe }}</p>
+        </li>
+    {% endfor %}
+</ul>
+
+<td>Page: </td>
+{% if page_obj.has_previous %}
+    <a href="?{% url_replace page=1 %}">1</a>
+    {% if page_obj.number == 3 %}
+        <a href="?{% url_replace page=2 %}">2</a>
+    {% endif %}
+    {% if page_obj.number >= 4 %}
+        ...
+        <a href="?{% url_replace page=page_obj.previous_page_number %}">{{ page_obj.previous_page_number }}</a>
+    {% endif %}
+{% endif %}
+
+<strong>{{ page_obj.number }}</strong>
+
+{% if page_obj.has_next %}
+    <a href="?{% url_replace page=page_obj.next_page_number %}">{{ page_obj.next_page_number }}</a>
+    {% if page_obj.next_page_number == paginator.num_pages|add:'-1' %}
+        <a href="?{% url_replace page=page_obj.paginator.num_pages %}">{{ page_obj.paginator.num_pages }}</a>
+    {% endif %}
+    {% if page_obj.next_page_number < paginator.num_pages|add:'-1' %}
+        ...
+        <a href="?{% url_replace page=page_obj.paginator.num_pages %}">{{ page_obj.paginator.num_pages }}</a>
+    {% endif %}
+{% endif %}
+
+{% else %}
+    <h2>There's nothing here yet!</h2>
+{% endif %}
+{% endblock content %}

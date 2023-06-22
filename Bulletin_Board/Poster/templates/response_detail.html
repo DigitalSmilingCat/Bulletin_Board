@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Response details
+{% endblock title %}
+
+{% block content %}
+<small class="fw-bold">{{ response.created|date:'d.m.y' }} </small>
+<small class="text-muted ">(from: {{ response.user.username }})</small> <br>
+<hr>
+{{ response.text }}
+<hr>
+{% if response.status == 'A' or response.status is None %}
+    {% if response.status == 'A' %}
+        <em>Status: <b>{{ response.get_status_display }}</b></em>
+    {% else %}
+        <a href="{% url 'approve' pk=response.pk %}"><button>Approve</button></a>
+        <a href="{% url 'reject' pk=response.pk %}"><button>Reject</button></a>
+    {% endif %}
+{% endif %}
+{% endblock content %}

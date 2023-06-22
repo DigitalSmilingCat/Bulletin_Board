@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Poster details
+{% endblock title %}
+
+{% block content %}
+<h1>{{ poster.title}}</h1>
+{{ poster.created|date:'d.m.y' }}
+<hr>
+{{ poster.content|safe }}
+<hr>
+<b>Author</b>: {{ poster.user }}<br>
+<b>Category</b>: {{ poster.category }}
+<hr>
+{% if poster_author %}
+    <button> <a href="/{{ poster.id }}/edit/">Edit</a> </button>
+    <button> <a href="/{{ poster.id }}/delete/">Delete</a> </button>
+{% else %}
+    <button> <a href="/{{ poster.id }}/respond/">Respond</a> </button>
+{% endif %}
+{% endblock content %}
