@@ -11,9 +11,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .forms import ProfileForm
-import os
-from dotenv import load_dotenv
-load_dotenv()
+from django.conf import settings
 
 
 class BaseRegisterView(CreateView):
@@ -37,12 +35,12 @@ def login_view(request):
                 send_mail(
                     subject='Bulletin Board: your verification code',
                     message=f'Code: {code.code}',
-                    from_email=os.getenv('EMAIL_HOST_USER') + '@yandex.ru',
+                    from_email=settings.DEFAULT_FROM_EMAIL,
                     recipient_list=[user.email]
                 )
                 return redirect('/account/code')
             else:
-                message = 'Invalid login'
+                message = 'Invalid login or password'
     return render(request, 'login.html', context={'form': form, 'message': message})
 
 

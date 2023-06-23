@@ -8,9 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.core.mail import send_mail
 from .filters import PosterFilter
-import os
-from dotenv import load_dotenv
-load_dotenv()
+from django.conf import settings
 
 
 class PosterList(ListView):
@@ -127,7 +125,7 @@ class ResponseCreate(LoginRequiredMixin, CreateView):
         send_mail(
             subject=f'Response for "{self.object.poster.title}"',
             message=f'Response content: "{self.object.text}".\nYou can view the response here: {response_url}',
-            from_email=os.getenv('EMAIL_HOST_USER') + '@yandex.ru',
+            from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[self.object.poster.user.email]
         )
         return result
@@ -146,7 +144,7 @@ def approve_response(request, pk):
     send_mail(
         subject=f'Bulletin Board: your response is approved',
         message=f'Your response for "{response.poster.title}" is approved. You can view the poster here: {poster_url}',
-        from_email=os.getenv('EMAIL_HOST_USER') + '@yandex.ru',
+        from_email=settings.DEFAULT_FROM_EMAIL,
         recipient_list=[response.user.email]
     )
     return HttpResponseRedirect(reverse('response_list'))
